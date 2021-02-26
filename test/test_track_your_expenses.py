@@ -1,7 +1,8 @@
 import unittest
 import datetime
-from app.tracker import Tracker
+from app.tracker import Tracker, group_expenses_by_category
 from app.expense import Expense
+
 
 class TestTrackYourExpenses(unittest.TestCase):
     def test_should_add_a_new_expense(self):
@@ -56,7 +57,9 @@ class TestTrackYourExpenses(unittest.TestCase):
         tracker.add_expense(expense2)
         tracker.add_expense(expense3)
         expenses = tracker.get_expenses_by_month_and_year(2, 2021)
-        grouped_expenses = tracker.group_expenses_by_category(expenses)
-        self.assertEqual({"spesa cibo": [expense1, expense2], "benzina": [expense3]}, grouped_expenses)
+        grouped_expenses = group_expenses_by_category(expenses)
+        self.assertEqual(True, expense1 in grouped_expenses["spesa cibo"])
+        self.assertEqual(True, expense2 in grouped_expenses["spesa cibo"])
+        self.assertEqual(True, expense3 in grouped_expenses["benzina"])
 
 
