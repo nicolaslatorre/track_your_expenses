@@ -1,6 +1,6 @@
 import unittest
 import datetime
-from app.tracker import Tracker, group_expenses_by_category
+from app.tracker import Tracker, group_expenses_by_category, compute_total_by_category
 from app.expense import Expense
 
 
@@ -61,5 +61,21 @@ class TestTrackYourExpenses(unittest.TestCase):
         self.assertEqual(True, expense1 in grouped_expenses["spesa cibo"])
         self.assertEqual(True, expense2 in grouped_expenses["spesa cibo"])
         self.assertEqual(True, expense3 in grouped_expenses["benzina"])
+
+    def test_should_compute_the_total_for_each_category(self):
+        tracker = Tracker()
+        expense1 = Expense("spesa cibo", 40, datetime.date(2021, 2, 14))
+        expense2 = Expense("spesa cibo", 12, datetime.date(2021, 2, 23))
+        expense3 = Expense("benzina", 20, datetime.date(2021, 2, 26))
+        expense4 = Expense("benzina", 70, datetime.date(2021, 2, 28))
+        tracker.add_expense(expense1)
+        tracker.add_expense(expense2)
+        tracker.add_expense(expense3)
+        tracker.add_expense(expense4)
+        expenses = tracker.get_expenses_by_month_and_year(2, 2021)
+        grouped_expenses = group_expenses_by_category(expenses)
+        total_by_category = compute_total_by_category(grouped_expenses)
+        self.assertEqual(52, total_by_category[0][1])
+        self.assertEqual(90, total_by_category[1][1])
 
 

@@ -1,4 +1,5 @@
 import datetime
+from functools import reduce
 
 
 def group_expenses_by_category(expenses):
@@ -9,6 +10,11 @@ def group_expenses_by_category(expenses):
         else:
             grouped_expenses[value.category].append(value)
     return grouped_expenses
+
+
+def compute_total_by_category(expenses_by_category):
+    # return a list of tuples, where the first item is the category, and the second item is the total
+    return list(map(lambda elem: (elem[0], reduce((lambda x, y: x.value + y.value), elem[1])), expenses_by_category.items()))
 
 
 class Tracker(object):
